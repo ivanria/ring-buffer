@@ -1,4 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+#define SUCC 0
+#define FULL -1
+#define EMPT -2
+#define FAIL -3
 
 struct buf {
 	unsigned int mask;
@@ -6,11 +12,19 @@ struct buf {
 	int *data;
 };
 
+void print_buf(struct buf *buf, char *str)
+{
+	unsigned int i, end;
+	int *data;
+	printf("\n====%s====\n", str);
+	for (i = 0, end = buf->mask, data = buf->data; i < end; i++)
+		printf("%d ", data[i]);
+}
 int push(struct buf *buf, int val)
 {
 	unsigned int head = buf->head;
 	print_buf(buf, "befor push");
-	if ((head + 1) & buf->mask == buf->tail) {
+	if (((head + 1) & buf->mask) == buf->tail) {
 		print_buf(buf, "buffer full");
 		return FULL;
 	}
