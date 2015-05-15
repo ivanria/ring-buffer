@@ -1,7 +1,6 @@
 #ifndef _RING_BUFFER_H
 #define _RING_BUFFER_H
 
-#include <stdbool.h>
 #include <stdlib.h>
 
 typedef enum {
@@ -11,20 +10,20 @@ typedef enum {
 	RBERR  = -3
 } RBRetCod_t;
 
-typedef unsigned char* RBufDat_t; /* pointer to data */
-typedef unsigned int RBufPoint_t; /* head and tail pointers */
-typedef size_t RBufSiz_t; /* size of buffer */
-typedef struct {
-	RBufSiz_t size; /*size and mask*/
-	RBufDat_t rbufdat; /*pointer to buffer*/
-	RBufPoint_t head, tail; /*head and tail pointers*/
-} RBuf_t;
+typedef int RBId_t;
+typedef unsigned char RBDatUnit_t;
+typedef unsigned char* RBScope_t; /* pointer to data */
+typedef unsigned int RBPoint_t; /* head and tail pointers */
+typedef size_t RBSiz_t; /* size of buffer */
+typedef struct * {
+	RBSiz_t size; /*size and mask*/
+	RBScope_t bufdat; /*pointer to buffer*/
+	RBPoint_t head, tail; /*head and tail pointers*/
+} RB_t;
 
-RBRetCod_t RBufInit(size_t size, RBuf_t *rbufp);
-RBRetCod_t RBufDeInit(void);
-int RBufNum(void);
-RBRetCod_t RBufDelN(int n)
-RBRetCod_t RBufPush(unsigned char dat);
-RBRetCod_t RBufPull(unsigned char *dat);
+RBRetCod_t RBInit(RBSiz_t size, RBId_t *id);
+RBRetCod_t RBDeInit(void);
+RBRetCod_t RBPush(RBDatUnit dat);
+RBRetCod_t RBPull(RBDatUnit *dat);
 
 #endif /*_RING_BUFFER_H*/
