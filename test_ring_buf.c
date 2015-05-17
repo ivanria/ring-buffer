@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define SUCC 0
 #define FULL -1
@@ -10,6 +11,7 @@ struct buf {
 	unsigned int mask;
 	int head, tail;
 	int *data;
+	bool full_fl, empt_fl;
 };
 
 void print_buf(struct buf *buf, char *str)
@@ -58,13 +60,13 @@ struct buf *init(size_t size)
 		return NULL;
 	}
 	for (i = 2; i < size; i *= 2);
-	i--;
-	if ((buf->data = malloc(sizeof(int) * size)) == NULL) {
+	if ((buf->data = malloc(sizeof(int) * i)) == NULL) {
 		perror("cannot allocate buffer memory");
 		free(buf);
 		return NULL;
 	}
-	buf->mask = i;
+	buf->mask = i - 1;
+	buf->full_fl = false, buf->empt_fl = true;
 	buf->head = buf->tail = 0;
 	return buf;
 }
@@ -82,5 +84,17 @@ int del(struct buf *buf)
 
 int main(void)
 {
+#ifdef DEBUG
+	extern int EF_ALIGNMENT;
+	EF_ALIGNMENT = 0;
+#endif
+	struct buf *buf = init(20);
+	if (buf == NULL) {
+		return 1;
+	}
+	if (del(buf) != SUCC) {
+		fprintf(stderr, "cannot free buffer\n");
+		return 1;
+	}
 	return 0;
 }
